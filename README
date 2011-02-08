@@ -1,0 +1,40 @@
+            == Eclipse Runtime Packaging Project (Temporary Github Version)==
+
+This package is licensed under the EPL.  Please refer to the COPYING
+and LICENSE files for the complete licenses within each package.
+
+This repository contains the package configurations for the Eclipse
+RTP project.
+
+	Basic Package: 
+	Contains Equinox and p2.
+  packages/org.eclipse.rtp.package.basic.feature
+  packages/org.eclipse.rtp.package.basic.product
+
+
+            == WARNINGS / CAVEATS ==
+
+NONE
+
+            == COMPATIBILITY ==
+
+- Eclipse 3.7.0 M4 is the minimum Eclipse version to build the package 
+	configurations.
+
+            == Support ==
+
+TBD
+
+
+            == Contributing ==
+
+  See SUBMITTING_PATCHES in this directory. However, feedback and bug reports
+  are also contributions.
+
+
+            == About RTP ==
+
+More information about RTP can be obtained from the RTP websites:
+
+  http://eclipse.org/proposals/rt-packaging
+

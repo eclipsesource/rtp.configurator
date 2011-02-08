@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product uid="org.eclipse.rtp.package.web" id="org.eclipse.rtp.package.web" useFeatures="true" includeLaunchers="false">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <programArgs>-console</programArgs>
+      <vmArgs>-Declipse.ignoreApp=true
+-Dosgi.noShutdown=true</vmArgs>
+      <vmArgsMac>-Djetty.home=../../.. -Dlogback.configurationFile=../../../etc/logback.xml -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.eclipse.equinox.server.core"/>
+      <feature id="org.eclipse.equinox.server.p2"/>
+      <feature id="org.eclipse.jetty.p2.extras"/>
+      <feature id="org.eclipse.rtp.package.web.feature" version="1.0.0.qualifier"/>
+   </features>
+
+   <configurations>
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.frameworkadmin.equinox" autoStart="true" startLevel="3" />
+      <plugin id="org.eclipse.equinox.p2.console" autoStart="true" startLevel="3" />
+      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator" autoStart="true" startLevel="3" />
+      <plugin id="org.eclipse.jetty.osgi.boot" autoStart="true" startLevel="3" />
+      <plugin id="org.eclipse.jetty.osgi.httpservice" autoStart="true" startLevel="4" />
+   </configurations>
+
+</product>

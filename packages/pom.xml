@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2011, EclipseSource and others
+
+   All rights reserved. This program and the accompanying materials
+   are made available under the terms of the Eclipse Public License v1.0
+   which accompanies this distribution, and is available at
+   http://www.eclipse.org/legal/epl-v10.html
+-->
+
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <groupId>org.eclipse</groupId>
+  <artifactId>rtp-packages-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>RTP packages (Incubation)</name>
+
+  <properties>
+    <rtp-version>0.0.1-SNAPSHOT</rtp-version>
+		<artifact-build-name>${project.artifactId}_${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.v${maven.build.timestamp}-${build-identifier}</artifact-build-name>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tycho-version>0.10.0</tycho-version>
+		<tycho-groupid>org.sonatype.tycho</tycho-groupid>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>platform-indigo</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>indigo</value>
+        </property>
+      </activation>
+      <properties>
+        <eclipse-site>http://download.eclipse.org/eclipse/updates/3.7-I-builds</eclipse-site>
+				<jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.7milestones</jetty-site>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-helios</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>helios</value>
+        </property>
+      </activation>
+      <properties>
+        <eclipse-site>http://download.eclipse.org/releases/helios</eclipse-site>
+				<jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.6.x</jetty-site>
+      </properties>
+    </profile>
+  </profiles>
+
+  <mailingLists>
+    <mailingList>
+      <name>rtp-dev Mailing List</name>
+      <post>rtp-dev@eclipse.org</post>
+      <subscribe>https://dev.eclipse.org/mailman/listinfo/rtp-dev</subscribe>
+      <unsubscribe>https://dev.eclipse.org/mailman/listinfo/rtp-dev</unsubscribe>
+      <archive>http://dev.eclipse.org/mhonarc/lists/rtp-dev</archive>
+    </mailingList>
+  </mailingLists>
+
+  <issueManagement>
+    <url>https://bugs.eclipse.org/bugs/buglist.cgi?query_format=advanced;product=RTP;classification=Technology</url>
+    <system>Bugzilla</system>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>Eclipse Public License v1.0</name>
+      <comments>
+       All rights reserved.
+
+       This program and the accompanying materials are made
+       available under the terms of the Eclipse Public License v1.0
+       which accompanies this distribution, and is available at
+       http://www.eclipse.org/legal/epl-v10.htm
+      </comments>
+    </license>
+  </licenses>
+
+  <modules>
+    <module>org.eclipse.rtp.package.basic.feature</module>
+    <module>org.eclipse.rtp.package.basic</module>
+    <module>org.eclipse.rtp.package.web.feature</module>
+    <module>org.eclipse.rtp.package.web</module>
+  </modules>
+
+  <repositories>
+    <repository>
+      <id>eclipse</id>
+      <layout>p2</layout>
+      <url>${eclipse-site}</url>
+    </repository>
+    <repository>
+      <id>jetty</id>
+      <layout>p2</layout>
+      <url>${jetty-site}</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>${tycho-groupid}</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
+      </plugin>
+
+      <plugin>
+        <groupId>${tycho-groupid}</groupId>
+        <artifactId>maven-osgi-compiler-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>${tycho-groupid}</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <resolver>p2</resolver>
+					<ignoreTychoRepositories>true</ignoreTychoRepositories>
+					<environments>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86</arch>
+            </environment>
+          </environments>
+        </configuration>
+      </plugin>
+
+			<plugin>
+        <!-- TODO remove workaround when
+           https://issues.sonatype.org/browse/TYCHO-473
+           is fixed -->
+        <groupId>${tycho-groupid}</groupId>
+        <artifactId>maven-osgi-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>attach-source</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+        <executions>
+          <execution>
+            <id>set-osgi-version</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+			<plugin>
+	       <groupId>${tycho-groupid}</groupId>
+	       <artifactId>maven-osgi-packaging-plugin</artifactId>
+	       <version>${tycho-version}</version>
+	       <configuration>
+	          <format>'v'yyyyMMdd-HHmm</format>
+	       </configuration>
+	    </plugin>
+		</plugins>
+  </build>
+</project>
