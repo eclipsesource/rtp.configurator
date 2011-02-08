@@ -20,7 +20,7 @@
       <feature id="org.eclipse.equinox.server.core"/>
       <feature id="org.eclipse.equinox.server.p2"/>
       <feature id="org.eclipse.jetty.p2.extras"/>
-      <feature id="org.eclipse.rtp.package.web.feature" version="1.0.0.qualifier"/>
+      <feature id="org.eclipse.rtp.package.web.feature"/>
    </features>
 
    <configurations>
