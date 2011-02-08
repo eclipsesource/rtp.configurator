@@ -7,7 +7,8 @@
   <parent>
     <artifactId>rtp-packages-parent</artifactId>
     <groupId>org.eclipse</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../org.eclipse.rtp.releng/pom.xml</relativePath>
   </parent>
 
   <properties>
@@ -19,7 +20,7 @@
 
   <groupId>org.eclipse</groupId>
   <artifactId>org.eclipse.rtp.package.web</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>eclipse-repository</packaging>
 
   <build>

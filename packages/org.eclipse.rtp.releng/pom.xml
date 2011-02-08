@@ -15,13 +15,13 @@
 
   <groupId>org.eclipse</groupId>
   <artifactId>rtp-packages-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>RTP packages (Incubation)</name>
 
   <properties>
-    <rtp-version>0.0.1-SNAPSHOT</rtp-version>
+    <rtp-version>0.1.0-SNAPSHOT</rtp-version>
     <artifact-build-name>${project.artifactId}-incubation_${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.v${maven.build.timestamp}-${build-identifier}</artifact-build-name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho-version>0.10.0</tycho-version>
