@@ -133,8 +133,8 @@
           <ignoreTychoRepositories>true</ignoreTychoRepositories>
           <environments>
             <environment>
-              <os>macosx</os>
-              <ws>cocoa</ws>
+              <os>linux</os>
+              <ws>gtk</ws>
               <arch>x86</arch>
             </environment>
           </environments>
