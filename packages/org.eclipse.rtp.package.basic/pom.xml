@@ -75,7 +75,7 @@
               <outputDirectory>${package-dir}</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${basedir}/target/products/${project.artifactId}/macosx/cocoa/x86</directory>
+                  <directory>${basedir}/target/products/${project.artifactId}/linux/gtk/x86</directory>
                   <includes>
                     <include>configuration/**</include>
                     <include>features/**</include>
