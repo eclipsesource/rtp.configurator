@@ -15,7 +15,7 @@
     <build-output-directory>${basedir}/target/build</build-output-directory>
     <tmp-dir>${basedir}/target/tmp</tmp-dir>
     <package-dir>${tmp-dir}/${artifact-build-name}</package-dir>
-    <repository-dir>${build-output-directory}/${artifact-build-name}-repository</repository-dir>
+    <repository-dir>${build-output-directory}/repository</repository-dir>
   </properties>
 
   <groupId>org.eclipse</groupId>
