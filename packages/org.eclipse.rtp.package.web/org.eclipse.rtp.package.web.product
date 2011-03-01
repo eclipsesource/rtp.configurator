@@ -9,9 +9,20 @@
    <launcherArgs>
       <programArgs>-console</programArgs>
       <vmArgs>-Declipse.ignoreApp=true
--Dosgi.noShutdown=true</vmArgs>
+-Dosgi.noShutdown=true
+-Djetty.home=.
+-Dlogback.configurationFile=etc/logback.xml</vmArgs>
       <vmArgsMac>-Djetty.home=../../.. -Dlogback.configurationFile=../../../etc/logback.xml -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
+
+   <launcher name="rtweb">
+      <macosx icon="/org.eclipse.rtp.package.web.product/rt.icns"/>
+      <solaris/>
+      <win useIco="true">
+         <ico path="/org.eclipse.rtp.package.web.product/rt.ico"/>
+         <bmp/>
+      </win>
+   </launcher>
 
    <plugins>
    </plugins>
@@ -20,7 +31,7 @@
       <feature id="org.eclipse.equinox.server.core"/>
       <feature id="org.eclipse.equinox.server.p2"/>
       <feature id="org.eclipse.jetty.p2.extras"/>
-      <feature id="org.eclipse.rtp.package.web.feature" version="0.1.0.qualifier"/>
+      <feature id="org.eclipse.rtp.package.web.feature"/>
    </features>
 
    <configurations>

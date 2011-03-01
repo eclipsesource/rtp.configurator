@@ -24,7 +24,7 @@
     <rtp-version>0.1.0-SNAPSHOT</rtp-version>
     <artifact-build-name>${project.artifactId}-incubation_${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.v${maven.build.timestamp}-${build-identifier}</artifact-build-name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tycho-version>0.10.0</tycho-version>
+    <tycho-version>0.11.0-SNAPSHOT</tycho-version>
     <tycho-groupid>org.sonatype.tycho</tycho-groupid>
   </properties>
 
@@ -106,6 +106,19 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tycho</id>
+      <url>https://repository.sonatype.org/content/repositories/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
     <plugins>
       <plugin>
@@ -137,6 +150,38 @@
               <ws>gtk</ws>
               <arch>x86</arch>
             </environment>
+            <environment>
+              <os>linux</os>
+              <ws>gtk</ws>
+              <arch>x86_64</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>win32</os>
+              <ws>win32</ws>
+              <arch>x86_64</arch>
+            </environment>
+<!-- p2 has too many bugs to support macosx just yet ... only enable this 
+when tycho is built using a patched version of p2.publisher
+            <environment>
+              <os>macosx</os>
+              <ws>carbon</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86</arch>
+            </environment>
+            <environment>
+              <os>macosx</os>
+              <ws>cocoa</ws>
+              <arch>x86_64</arch>
+            </environment> -->
           </environments>
         </configuration>
       </plugin>
