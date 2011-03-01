@@ -33,7 +33,7 @@
           <publishArtifacts>true</publishArtifacts>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>${tycho-groupid}</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
@@ -56,7 +56,7 @@
           <products>
             <product>
               <id>${project.artifactId}</id>
-              <rootFolder>rtbasic-${project.version}</rootFolder>
+              <rootFolder>rtbasic-${artifact-build-version}</rootFolder>
             </product>
           </products>
         </configuration>
