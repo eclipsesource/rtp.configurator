@@ -57,7 +57,7 @@ please make sure it cleanly applies to the "master" branch head.
 
 (3) Check the license.
 
-EGit is licensed under the Eclipse Public License (EPL).
+RTP is licensed under the Eclipse Public License (EPL).
 
 Under this licensing model *every* file within the project
 *must* list which license covers it in the header of the file.
