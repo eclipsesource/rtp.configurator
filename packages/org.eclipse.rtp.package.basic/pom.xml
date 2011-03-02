@@ -11,13 +11,6 @@
     <relativePath>../org.eclipse.rtp.releng/pom.xml</relativePath>
   </parent>
 
-  <properties>
-    <build-output-directory>${basedir}/target/build</build-output-directory>
-    <tmp-dir>${basedir}/target/tmp</tmp-dir>
-    <package-dir>${tmp-dir}/${artifact-build-name}</package-dir>
-    <repository-dir>${build-output-directory}/repository</repository-dir>
-  </properties>
-
   <groupId>org.eclipse</groupId>
   <artifactId>org.eclipse.rtp.package.basic</artifactId>
   <version>0.1.0-SNAPSHOT</version>
@@ -56,7 +49,7 @@
           <products>
             <product>
               <id>${project.artifactId}</id>
-              <rootFolder>rtbasic-${artifact-build-version}</rootFolder>
+              <rootFolder>rt-basic-incubation-${artifact-build-version}</rootFolder>
             </product>
           </products>
         </configuration>

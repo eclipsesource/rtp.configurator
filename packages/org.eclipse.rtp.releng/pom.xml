@@ -22,8 +22,7 @@
 
   <properties>
     <rtp-version>0.1.0-SNAPSHOT</rtp-version>
-    <artifact-build-version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.v${maven.build.timestamp}<!-- -${build-identifier} --></artifact-build-version>
-    <artifact-build-name>${project.artifactId}-incubation_${artifact-build-version}</artifact-build-name>
+    <artifact-build-version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.v${maven.build.timestamp}-${build-identifier}</artifact-build-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tycho-version>0.11.0-SNAPSHOT</tycho-version>
     <tycho-groupid>org.sonatype.tycho</tycho-groupid>
