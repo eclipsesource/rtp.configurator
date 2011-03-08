@@ -22,6 +22,10 @@
          version="0.0.0"/>
 
    <includes
+         id="org.eclipse.jetty.all.dependencies"
+         version="0.0.0"/>
+
+   <includes
          id="javax.servlet.jsp.glassfish"
          version="0.0.0"/>
 
