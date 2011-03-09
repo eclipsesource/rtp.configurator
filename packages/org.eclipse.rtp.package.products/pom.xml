@@ -34,16 +34,22 @@
         <executions>
           <execution>
             <id>materialize-products</id>
+            <!-- Choose a different phase so that we
+            can run the sign and pack goals that take place after the packaging -->
+            <phase>integration-test</phase>
             <goals>
               <goal>materialize-products</goal>
             </goals>
           </execution>
-          <execution>
+          <!-- don't archive: we do the archiving from a post-tycho-release.sh script
+          it takes care of a few things. -->
+          <!--execution>
             <id>archive-products</id>
+            <phase>integration-test</phase>
             <goals>
               <goal>archive-products</goal>
             </goals>
-          </execution>
+          </execution-->
         </executions>
         <configuration>
           <products>
@@ -121,7 +127,7 @@
               <executions>
                 <execution>
                   <id>deploy</id>
-                  <phase>install</phase>
+                  <phase>verify</phase>
                   <goals>
                     <goal>run</goal>
                   </goals>

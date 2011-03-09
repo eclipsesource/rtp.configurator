@@ -1,6 +1,16 @@
-#!/bin/sh
+#!/bin/bash
+################################################################################
+# Copyright (c) 2011 EclipseSource Inc. and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+# 
+# Contributors:
+#     hmalphettes - initial API and implementation
+################################################################################
 # Called once the tycho build has completed.
-# Takes care of a few shortcomings in the current tycho build:
+# Takes care of a few shortcomings in the current tycho build.
 
 #Change to the packages directory starting from the directory of this script:
 cd `dirname $0`/..
@@ -26,8 +36,13 @@ RT_BASIC_LINUX32_PRODUCT="$BUILT_PRODUCTS/org.eclipse.rtp.package.basic/linux/gt
 [ ! -d "$RT_BASIC_LINUX32_PRODUCT" ] && { echo "ERROR: unable to locate a built product $RT_BASIC_LINUX32_PRODUCT is not a folder"; exit 42; }
 # Reads the name of the top level folder.
 RT_BASIC_FOLDER_NAME=`find $RT_BASIC_LINUX32_PRODUCT -maxdepth 1 -mindepth 1 -type d -exec basename {} \;`
-# Now change the permission:
+#get the version number from the folder name. it looks like this:
+# rt-basic-incubation-0.1.0.v20110308-1653-N
+BUILD_VERSION=$(echo "$RT_BASIC_FOLDER_NAME" | sed 's/^rt-basic-incubation-//')
+
+# Now change the permission: NOT useful anymore with TYCHO-566 partially fixed.
 find $RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME -maxdepth 1 -name *.sh -exec chmod +x {} \;
+
 #Remove the executable launcher specific to linux32
 RT_BASIC_EXEC=$RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME/eclipse
 [ -f "$RT_BASIC_EXEC" ] && rm $RT_BASIC_EXEC || echo "INFO: no native launcher to delete $RT_BASIC_EXEC"
@@ -60,5 +75,15 @@ cd $PACKAGES_FOLDER
 # a location on download.eclipse.org where they can be downloaded.
 # Move the generated p2 repository to a location on download.eclipse.org
 # where they can be consumed.
+if [ -d "/home/data/httpd/download.eclipse.org/rtp/incubation/" ]; then
 
+  DOWNLOAD_PRODUCTS_FOLDER=/home/data/httpd/download.eclipse.org/rtp/incubation/$BUILD_VERSION
+  mkdir -p $DOWNLOAD_PRODUCTS_FOLDER
+  mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
+  mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
+  mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.zip /home$DOWNLOAD_PRODUCTS_FOLDER
+  mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
 
+  # The p2 repository is already taken care of by the build.
+  # Although we should definitly take catre of mataining a symbolic link to the latest or update
+  # a composite repository and may delete the old builds.
