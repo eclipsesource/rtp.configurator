@@ -59,7 +59,7 @@
         <jetty-site>file:///home/data/httpd/download.eclipse.org/jetty/updates/jetty-rt-3.7-I-builds/7.3.1.201107120810</jetty-site>
       </properties>
     </profile>
-    <profile>
+    <!--profile>
       <id>platform-helios</id>
       <activation>
         <property>
@@ -71,7 +71,7 @@
         <eclipse-site>http://download.eclipse.org/releases/helios</eclipse-site>
         <jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.6.x</jetty-site>
       </properties>
-    </profile>
+    </profile-->
   </profiles>
 
   <mailingLists>
