@@ -45,6 +45,21 @@
       </properties>
     </profile>
     <profile>
+      <id>platform-indigo-local</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>indigo-local</value>
+        </property>
+      </activation>
+      <properties>
+        <eclipse-site>file:///home/data/httpd/download.eclipse.org/eclipse/updates/3.7-N-builds</eclipse-site>
+        <!-- for now use the M6 warm up build for jetty-7.3.1
+        <jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.7milestones</jetty-site> -->
+        <jetty-site>file:///home/data/httpd/download.eclipse.org/jetty/updates/jetty-rt-3.7-I-builds/7.3.1.201107120810</jetty-site>
+      </properties>
+    </profile>
+    <profile>
       <id>platform-helios</id>
       <activation>
         <property>
@@ -90,9 +105,7 @@
 
   <modules>
     <module>../org.eclipse.rtp.package.basic.feature</module>
-    <!--module>../org.eclipse.rtp.package.basic</module-->
     <module>../org.eclipse.rtp.package.web.feature</module>
-    <!--module>../org.eclipse.rtp.package.web</module-->
     <module>../org.eclipse.rtp.package.products</module>
   </modules>
 
