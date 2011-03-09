@@ -75,15 +75,42 @@ cd $PACKAGES_FOLDER
 # a location on download.eclipse.org where they can be downloaded.
 # Move the generated p2 repository to a location on download.eclipse.org
 # where they can be consumed.
-if [ -d "/home/data/httpd/download.eclipse.org/rtp/incubation/" ]; then
+DOWNLOAD_FOLDER=/home/data/httpd/download.eclipse.org/rtp/incubation
 
-  DOWNLOAD_PRODUCTS_FOLDER=/home/data/httpd/download.eclipse.org/rtp/incubation/$BUILD_VERSION
-  mkdir -p $DOWNLOAD_PRODUCTS_FOLDER
+  DOWNLOAD_PRODUCTS_FOLDER="$DOWNLOAD_FOLDER/$BUILD_VERSION"
+
+# The p2 repository is already taken care of by the build.
+# Although we should definitly take catre of mataining a symbolic link to the latest or update
+# a composite repository and may delete the old builds.
+# check that the build identifier is defined and well known.
+BUILD_IDENTIFIER=`echo "$BUILD_VERSION" | sed 's/^.*\(.\)$/\1/'`
+if [ "$BUILD_IDENTIFIER" == "N" ]; then
+  DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7-N-builds"
+elif [ "$BUILD_IDENTIFIER" == "I" ]; then
+  DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7-I-builds"
+elif [ "$BUILD_IDENTIFIER" == "S" ]; then
+  DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7milestones"
+elif [ "$BUILD_IDENTIFIER" == "R" ]; then
+  DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7"
+else
+  echo "Unknown build identifier: the last character in the version $BUILD_VERSION is not 'N', 'I', 'S' or 'R'"
+fi
+
+
+
+if [ -d "$DOWNLOAD_FOLDER" ]; then
+
+  echo "Deploying the p2 repository in $DOWNLOAD_PRODUCTS_FOLDER"
+  mv $BUILT_PRODUCTS/repository $BUILT_PRODUCTS/$BUILD_VERSION
+  mv $BUILT_PRODUCTS/$BUILD_VERSION $DOWNLOAD_P2_FOLDER
+
+  echo "Deploying the archived products in $DOWNLOAD_PRODUCTS_FOLDER"
+  mkdir $DOWNLOAD_PRODUCTS_FOLDER
   mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
   mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
   mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.zip /home$DOWNLOAD_PRODUCTS_FOLDER
   mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
 
-  # The p2 repository is already taken care of by the build.
-  # Although we should definitly take catre of mataining a symbolic link to the latest or update
-  # a composite repository and may delete the old builds.
+else
+  echo "We are not on the download machine; not deploying in $DOWNLOAD_P2_FOLDER"
+fi
