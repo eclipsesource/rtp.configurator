@@ -11,6 +11,7 @@
 ################################################################################
 # Called once the tycho build has completed.
 # Takes care of a few shortcomings in the current tycho build.
+set -e
 
 #Change to the packages directory starting from the directory of this script:
 cd `dirname $0`/..
@@ -39,6 +40,7 @@ RT_BASIC_FOLDER_NAME=`find $RT_BASIC_LINUX32_PRODUCT -maxdepth 1 -mindepth 1 -ty
 #get the version number from the folder name. it looks like this:
 # rt-basic-incubation-0.1.0.v20110308-1653-N
 BUILD_VERSION=$(echo "$RT_BASIC_FOLDER_NAME" | sed 's/^rt-basic-incubation-//')
+
 
 # Now change the permission: NOT useful anymore with TYCHO-566 partially fixed.
 find $RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME -maxdepth 1 -name *.sh -exec chmod +x {} \;
@@ -76,8 +78,12 @@ cd $PACKAGES_FOLDER
 # Move the generated p2 repository to a location on download.eclipse.org
 # where they can be consumed.
 DOWNLOAD_FOLDER=/home/data/httpd/download.eclipse.org/rtp/incubation
-
-  DOWNLOAD_PRODUCTS_FOLDER="$DOWNLOAD_FOLDER/$BUILD_VERSION"
+if [ ! -d "$DOWNLOAD_FOLDER" ]; then
+#we are not on the eclipse build machine. for testing, let's
+#deploy the build inside the builds folder of org.eclipse.rtp.releng
+   DOWNLOAD_FOLDER="$PACKAGES_FOLDER/org.eclipse.rtp.releng/builds/download.eclipse.org/rtp/incubation"
+   mkdir -p $DOWNLOAD_FOLDER
+fi
 
 # The p2 repository is already taken care of by the build.
 # Although we should definitly take catre of mataining a symbolic link to the latest or update
@@ -94,23 +100,49 @@ elif [ "$BUILD_IDENTIFIER" == "R" ]; then
   DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7"
 else
   echo "Unknown build identifier: the last character in the version $BUILD_VERSION is not 'N', 'I', 'S' or 'R'"
+  exit 42
 fi
+mkdir -p $DOWNLOAD_P2_FOLDER
 
+#remove the last 2 characters to get the version number without build identifier.
+#This will make it easier to promote an N build to a I or S build.
+BUILD_VERSION_NO_BUILD_IDENTIFIER=$(echo "$BUILD_VERSION" | sed 's/.\{2\}$//')
 
+#Folder where the product archives are placed.
+DOWNLOAD_PRODUCTS_FOLDER=$DOWNLOAD_P2_FOLDER/$BUILD_VERSION_NO_BUILD_IDENTIFIER
 
-if [ -d "$DOWNLOAD_FOLDER" ]; then
+echo "Deploying the p2 repository in $DOWNLOAD_P2_FOLDER"
+[ -d "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER" ] && rm -rf "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER"
+[ -d "$DOWNLOAD_P2_FOLDER/$BUILD_VERSION_NO_BUILD_IDENTIFIER" ] && rm -rf "$DOWNLOAD_P2_FOLDER/$BUILD_VERSION_NO_BUILD_IDENTIFIER"
+cp -r "$BUILT_PRODUCTS/../repository" "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER"
+mv "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER" "$DOWNLOAD_P2_FOLDER"
 
-  echo "Deploying the p2 repository in $DOWNLOAD_PRODUCTS_FOLDER"
-  mv $BUILT_PRODUCTS/repository $BUILT_PRODUCTS/$BUILD_VERSION
-  mv $BUILT_PRODUCTS/$BUILD_VERSION $DOWNLOAD_P2_FOLDER
+echo "Deploying the archived products in $DOWNLOAD_PRODUCTS_FOLDER"
+mkdir -p $DOWNLOAD_PRODUCTS_FOLDER
+echo "$BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.zip"
+cp $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
+cp $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
+cp $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
+cp $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
 
-  echo "Deploying the archived products in $DOWNLOAD_PRODUCTS_FOLDER"
-  mkdir $DOWNLOAD_PRODUCTS_FOLDER
-  mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
-  mv $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
-  mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.zip /home$DOWNLOAD_PRODUCTS_FOLDER
-  mv $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
-
-else
-  echo "We are not on the download machine; not deploying in $DOWNLOAD_P2_FOLDER"
-fi
+echo "Generating the index.html for the p2 repository."
+echo "<html>
+  <head>
+    <title>Eclipse RTP build $BUILD_VERSION_NO_BUILD_IDENTIFIER</title>
+  </head>
+  <body>
+    <h2>Eclipse RTP build $BUILD_VERSION_NO_BUILD_IDENTIFIER</h2>
+    <p>This is a p2 repository.<br/>
+    It contains the Eclipse RTBasic and RTWeb product and features.
+    Point PDE or p2-driector or maven-tycho at the current url to start installing products and features published here</p>
+    <p>Product archives:
+       <ul>
+         <li><a href=\"$RT_BASIC_FOLDER_NAME.zip\">$RT_BASIC_FOLDER_NAME.zip</a></li>
+         <li><a href=\"$RT_BASIC_FOLDER_NAME.tar.gz\">$RT_BASIC_FOLDER_NAME.tar.gz</a></li>
+         <li><a href=\"$RT_WEB_FOLDER_NAME.zip\">$RT_WEB_FOLDER_NAME.zip</a></li>
+         <li><a href=\"$RT_WEB_FOLDER_NAME.tar.gz\">$RT_WEB_FOLDER_NAME.tar.gz</a></li>
+       </ul>
+    </p>
+    <p><a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
+  </body>
+</html>" > "$DOWNLOAD_PRODUCTS_FOLDER/index.html"

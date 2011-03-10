@@ -2,3 +2,4 @@ bin
 target
 CVS
 packages/org.eclipse.rtp.releng/workspace
+packages/org.eclipse.rtp.releng/builds
