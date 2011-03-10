@@ -13,6 +13,8 @@
 # Takes care of a few shortcomings in the current tycho build.
 set -e
 
+CURRENT_DIR=`pwd`
+
 #Change to the packages directory starting from the directory of this script:
 cd `dirname $0`/..
 PACKAGES_FOLDER=`pwd`
@@ -116,6 +118,15 @@ echo "Deploying the p2 repository in $DOWNLOAD_P2_FOLDER"
 [ -d "$DOWNLOAD_P2_FOLDER/$BUILD_VERSION_NO_BUILD_IDENTIFIER" ] && rm -rf "$DOWNLOAD_P2_FOLDER/$BUILD_VERSION_NO_BUILD_IDENTIFIER"
 cp -r "$BUILT_PRODUCTS/../repository" "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER"
 mv "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER" "$DOWNLOAD_P2_FOLDER"
+
+echo "Create the symbolic link 'current' to the p2 repository"
+#make sure that the symbolic link is a relative path. so it can be move arround, mirrored
+#etc as long as the p2repo folder is also moved around and mirrored at the same time.
+cd $DOWNLOAD_P2_FOLDER
+ln -s $BUILD_VERSION_NO_BUILD_IDENTIFIER "current"
+#back to the original directory before we exit:
+cd $CURRENT_DIR
+
 
 echo "Deploying the archived products in $DOWNLOAD_PRODUCTS_FOLDER"
 mkdir -p $DOWNLOAD_PRODUCTS_FOLDER
