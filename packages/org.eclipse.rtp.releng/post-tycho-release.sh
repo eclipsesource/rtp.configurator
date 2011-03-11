@@ -164,7 +164,7 @@ echo "<html>
          <li><a href=\"$RT_WEB_FOLDER_NAME.tar.gz\">$RT_WEB_FOLDER_NAME.tar.gz</a></li>
        </ul>
     </p>
-    <p><a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
+    <p>See <a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
   </body>
 </html>" > "$DOWNLOAD_PRODUCTS_FOLDER/index.html"
 
@@ -182,7 +182,7 @@ echo "<html>
     <p>
       The current $BUILD_IDENTIFIER_LABEL build and product archives are located here: <a href=\"$BUILD_VERSION_NO_BUILD_IDENTIFIER\">$BUILD_VERSION_NO_BUILD_IDENTIFIER</a>
     </p>
-    <p><a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
+    <p>See <a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
   </body>
 </html>" > "$DOWNLOAD_P2_FOLDER/index.html"
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
