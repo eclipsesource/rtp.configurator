@@ -78,6 +78,12 @@
   <profiles>
     <profile>
       <id>build-server</id>
+      <activation>
+        <property>
+          <name>pack-and-sign</name>
+          <value>true</value>
+        </property>
+      </activation>
       <build>
         <plugins>
           <plugin>
