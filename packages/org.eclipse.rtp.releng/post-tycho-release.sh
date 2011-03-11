@@ -94,12 +94,16 @@ fi
 BUILD_IDENTIFIER=`echo "$BUILD_VERSION" | sed 's/^.*\(.\)$/\1/'`
 if [ "$BUILD_IDENTIFIER" == "N" ]; then
   DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7-N-builds"
+  BUILD_IDENTIFIER_LABEL="Nightly"
 elif [ "$BUILD_IDENTIFIER" == "I" ]; then
   DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7-I-builds"
+  BUILD_IDENTIFIER_LABEL="Integration"
 elif [ "$BUILD_IDENTIFIER" == "S" ]; then
   DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7milestones"
+  BUILD_IDENTIFIER_LABEL="Stable"
 elif [ "$BUILD_IDENTIFIER" == "R" ]; then
   DOWNLOAD_P2_FOLDER="$DOWNLOAD_FOLDER/updates/3.7"
+  BUILD_IDENTIFIER_LABEL="Release"
 else
   echo "Unknown build identifier: the last character in the version $BUILD_VERSION is not 'N', 'I', 'S' or 'R'"
   exit 42
@@ -119,13 +123,15 @@ echo "Deploying the p2 repository in $DOWNLOAD_P2_FOLDER"
 cp -r "$BUILT_PRODUCTS/../repository" "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER"
 mv "$BUILT_PRODUCTS/../$BUILD_VERSION_NO_BUILD_IDENTIFIER" "$DOWNLOAD_P2_FOLDER"
 
-echo "Create the symbolic link 'current' to the p2 repository"
+#echo "Create the symbolic link 'current' to the p2 repository... 
+#this does not work on eclipse server as the http server does not follow symbolic links."
 #make sure that the symbolic link is a relative path. so it can be move arround, mirrored
 #etc as long as the p2repo folder is also moved around and mirrored at the same time.
-cd $DOWNLOAD_P2_FOLDER
-ln -s $BUILD_VERSION_NO_BUILD_IDENTIFIER "current"
+#cd $DOWNLOAD_P2_FOLDER
+#[ -h "current"] && rm "current"
+#ln -s $BUILD_VERSION_NO_BUILD_IDENTIFIER "current"
 #back to the original directory before we exit:
-cd $CURRENT_DIR
+#cd $CURRENT_DIR
 
 
 echo "Deploying the archived products in $DOWNLOAD_PRODUCTS_FOLDER"
@@ -136,14 +142,18 @@ cp $BUILT_PRODUCTS/../$RT_BASIC_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
 cp $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.zip $DOWNLOAD_PRODUCTS_FOLDER
 cp $BUILT_PRODUCTS/../$RT_WEB_FOLDER_NAME.tar.gz $DOWNLOAD_PRODUCTS_FOLDER
 
+TIMESTAMP=`date +%s`
+TIMESTAMP_FORMATTED=`date -d "1970-01-01 UTC + $TIMESTAMP seconds"`
+
 echo "Generating the index.html for the p2 repository."
 echo "<html>
   <head>
     <title>Eclipse RTP build $BUILD_VERSION_NO_BUILD_IDENTIFIER</title>
+    <link rel=\"icon\" type=\"image/png\" href=\"http://eclipse.org/rtp/images/favicon.png\" />
   </head>
   <body>
     <h2>Eclipse RTP build $BUILD_VERSION_NO_BUILD_IDENTIFIER</h2>
-    <p>This is a p2 repository.<br/>
+    <p>This is a p2 repository built on $TIMESTAMP_FORMATTED.<br/>
     It contains the Eclipse RTBasic and RTWeb product and features.
     Point PDE or p2-driector or maven-tycho at the current url to start installing products and features published here</p>
     <p>Product archives:
@@ -157,3 +167,47 @@ echo "<html>
     <p><a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
   </body>
 </html>" > "$DOWNLOAD_PRODUCTS_FOLDER/index.html"
+
+echo "Generating the composite repository in $DOWNLOAD_P2_FOLDER"
+echo "<html>
+  <head>
+    <title>Eclipse RTP current $BUILD_IDENTIFIER_LABEL build</title>
+    <link rel=\"icon\" type=\"image/png\" href=\"http://eclipse.org/rtp/images/favicon.png\" />
+  </head>
+  <body>
+    <h2>Eclipse RTP current $BUILD_IDENTIFIER_LABEL build. </h2>
+    <p>This is a composite p2 repository that point to the current $BUILD_IDENTIFIER_LABEL repository.<br/>
+      It was updated on $TIMESTAMP_FORMATTED.
+    </p>
+    <p>
+      The current $BUILD_IDENTIFIER_LABEL build and product archives are located here: <a href=\"$BUILD_VERSION_NO_BUILD_IDENTIFIER\">$BUILD_VERSION_NO_BUILD_IDENTIFIER</a>
+    </p>
+    <p><a href=\"http://eclipse.org/rtp\">Eclipse RTP</a></p>
+  </body>
+</html>" > "$DOWNLOAD_P2_FOLDER/index.html"
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<?compositeArtifactRepository version=\"1.0.0\"?>
+<repository name=\"&quot;Eclipse RTP $BUILD_IDENTIFIER_LABEL&quot;\"
+    type=\"org.eclipse.equinox.internal.p2.artifact.repository.CompositeArtifactRepository\" version=\"1.0.0\">
+  <properties size=\"1\">
+    <property name=\"p2.timestamp\" value=\"$TIMESTAMP\"/>
+  </properties>
+  <children size=\"1\">
+    <child location=\"$BUILD_VERSION_NO_BUILD_IDENTIFIER\"/>
+  </children>
+</repository>" > "$DOWNLOAD_P2_FOLDER/artifacts.xml"
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<?compositeMetadataRepository version=\"1.0.0\"?>
+<repository name=\"&quot;Eclipse RTP $BUILD_IDENTIFIER_LABEL&quot;\"
+    type=\"org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository\" version=\"1.0.0\">
+  <properties size=\"1\">
+    <property name=\"p2.timestamp\" value=\"$TIMESTAMP\"/>
+  </properties>
+  <children size=\"1\">
+    <child location=\"$BUILD_VERSION_NO_BUILD_IDENTIFIER\"/>
+  </children>
+</repository>" > "$DOWNLOAD_P2_FOLDER/content.xml"
+
+
+echo "Purging the old builds if this is an N or I build: TODO."
+
