@@ -31,6 +31,13 @@
   <profiles>
     <profile>
       <id>indigo-nightly</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+        <property>
+          <name>platform</name>
+          <value>indigo-nightly</value>
+        </property>
+      </activation>
       <properties>
         <eclipse-site>http://download.eclipse.org/eclipse/updates/3.7-N-builds</eclipse-site>
         <jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.7-I-builds/7.3.1.201107120810</jetty-site>
@@ -38,6 +45,12 @@
     </profile>
     <profile>
       <id>indigo-milestone</id>
+      <activation>
+        <property>
+          <name>platform</name>
+          <value>indigo-milestone</value>
+        </property>
+      </activation>
       <properties>
         <eclipse-site>http://download.eclipse.org/eclipse/updates/3.7milestones</eclipse-site>
         <!--  see eclipse bug 339697 -->
