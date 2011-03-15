@@ -48,8 +48,16 @@ BUILD_VERSION=$(echo "$RT_BASIC_FOLDER_NAME" | sed 's/^rt-basic-incubation-//')
 find $RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME -maxdepth 1 -name *.sh -exec chmod +x {} \;
 
 #Remove the executable launcher specific to linux32
+# Delete eclipse executable
 RT_BASIC_EXEC=$RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME/eclipse
 [ -f "$RT_BASIC_EXEC" ] && rm $RT_BASIC_EXEC || echo "INFO: no native launcher to delete $RT_BASIC_EXEC"
+# Delete libcairo-swt.so
+RT_BASIC_SWT_LIB=$RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME/libcairo-swt.so
+[ -f "$RT_BASIC_SWT_LIB" ] && rm $RT_BASIC_SWT_LIB || echo "INFO: no native launcher to delete $RT_BASIC_SWT_LIB"
+# Delete native launcher folder
+RT_BASIC_NATIVE_LAUNCHER=$RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME/plugins/`ls -1 $RT_BASIC_LINUX32_PRODUCT/$RT_BASIC_FOLDER_NAME/plugins | grep org.eclipse.equinox.launcher.gtk.linux.x86 | tail -n 1`
+[ -d "$RT_BASIC_NATIVE_LAUNCHER" ] && rm -rf $RT_BASIC_NATIVE_LAUNCHER || echo "INFO: no native launcher to delete $RT_BASIC_NATIVE_LAUNCHER"
+
 # Now tar.gz the whole thing
 cd $RT_BASIC_LINUX32_PRODUCT
 tar cvzf $RT_BASIC_FOLDER_NAME.tar.gz $RT_BASIC_FOLDER_NAME/
@@ -64,8 +72,16 @@ RT_WEB_LINUX32_PRODUCT="$BUILT_PRODUCTS/org.eclipse.rtp.package.web/linux/gtk/x8
 [ ! -d "$RT_WEB_LINUX32_PRODUCT" ] && { echo "ERROR: unable to locate a built product $RT_WEB_LINUX32_PRODUCT is not a folder"; exit 42; }
 RT_WEB_FOLDER_NAME=`find $RT_WEB_LINUX32_PRODUCT -maxdepth 1 -mindepth 1 -type d -exec basename {} \;`
 find $RT_WEB_LINUX32_PRODUCT/$RT_WEB_FOLDER_NAME -maxdepth 1 -name *.sh -exec chmod +x {} \;
+# Delete eclipse executable
 RT_WEB_EXEC=$RT_WEB_LINUX32_PRODUCT/$RT_WEB_FOLDER_NAME/eclipse
 [ -f "$RT_WEB_EXEC" ] && rm $RT_WEB_EXEC || echo "INFO: no native launcher to delete $RT_WEB_EXEC"
+# Delete libcairo-swt.so
+RT_WEB_SWT_LIB=$RT_WEB_LINUX32_PRODUCT/$RT_WEB_FOLDER_NAME/libcairo-swt.so
+[ -f "$RT_WEB_SWT_LIB" ] && rm $RT_WEB_SWT_LIB || echo "INFO: no native launcher to delete $RT_WEB_SWT_LIB"
+# Delete native launcher folder
+RT_WEB_NATIVE_LAUNCHER=$RT_WEB_LINUX32_PRODUCT/$RT_WEB_FOLDER_NAME/plugins/`ls -1 $RT_WEB_LINUX32_PRODUCT/$RT_WEB_FOLDER_NAME/plugins | grep org.eclipse.equinox.launcher.gtk.linux.x86 | tail -n 1`
+[ -d "$RT_WEB_NATIVE_LAUNCHER" ] && rm -rf $RT_WEB_NATIVE_LAUNCHER || echo "INFO: no native launcher to delete $RT_WEB_NATIVE_LAUNCHER"
+
 cd $RT_WEB_LINUX32_PRODUCT
 tar cvzf $RT_WEB_FOLDER_NAME.tar.gz $RT_WEB_FOLDER_NAME/
 zip -r $RT_WEB_FOLDER_NAME.zip $RT_WEB_FOLDER_NAME/
