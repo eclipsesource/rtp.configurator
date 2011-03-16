@@ -39,6 +39,7 @@
         </property>
       </activation>
       <properties>
+        <build-identifier>N</build-identifier>
         <eclipse-site>http://download.eclipse.org/eclipse/updates/3.7-N-builds</eclipse-site>
         <jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.7-I-builds/7.3.1.201107120810</jetty-site>
       </properties>
@@ -53,7 +54,6 @@
       </activation>
       <properties>
         <eclipse-site>http://download.eclipse.org/eclipse/updates/3.7milestones</eclipse-site>
-        <!--  see eclipse bug 339697 -->
         <jetty-site>http://download.eclipse.org/jetty/updates/jetty-rt-3.7milestones</jetty-site>
       </properties>
     </profile>
